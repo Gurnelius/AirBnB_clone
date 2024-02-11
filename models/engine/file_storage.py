@@ -57,16 +57,27 @@ class FileStorage:
                         json.dump(serialized_objs, f)
 
         def reload(self):
-                """Deserializes the JSON file to __objects."""
+                """
+                Deserializes the JSON file to __objects.
+
+                If the JSON file (__file_path) exists, it populates __objects with the deserialized data.
+                Otherwise, does nothing.
+                """
+                from models.base_model import BaseModel
+                
                 if path.exists(self.__file_path):
                         with open(self.__file_path, 'r') as f:
                                 data = json.load(f)
-                                for key, value in data.items():
-                                        class_name, obj_id = key.split('.')
-                                # Dynamically import the class
-                                cls = getattr(__import__('models.' + class_name,
-                                                         fromlist=[class_name]), class_name)
-                                # Create an instance of the class with its attributes
-                                obj = cls(**value)
-                                # Add the object to __objects
-                                self.__objects[key] = obj
+                        # Dictionary to hold class names and the corresponding classes
+                        class_map = {
+                                "BaseModel": BaseModel  # Add more mappings for other classes if needed
+                        }
+                        for key, value in data.items():
+                                class_name, obj_id = key.split('.')
+                                # Get the class from the dictionary
+                                cls = class_map.get(class_name)
+                                if cls:
+                                        # Create an instance of the class with its attributes
+                                        obj = cls(**value)
+                                        # Add the object to __objects
+                                        self.__objects[key] = obj
