@@ -37,7 +37,9 @@ class FileStorage:
                 Deserializes the JSON file specified by __file_path to populate the storage.
                 If the file does not exist, this method does nothing.
         """
-        
+        def __init__(self) -> None:
+                self.__file_path = "hbnb.json"
+                
         def all(self):
                 """Returns the dictionary __objects."""
                 return self.__objects
