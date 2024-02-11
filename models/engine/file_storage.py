@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
         FileStorage that serializes instances to a JSON file
         and deserializes JSON file to instances
@@ -37,8 +37,9 @@ class FileStorage:
                 Deserializes the JSON file specified by __file_path to populate the storage.
                 If the file does not exist, this method does nothing.
         """
-        def __init__(self) -> None:
-                self.__file_path = "hbnb.json"
+        
+        __file_path = "file.json"
+        __objects = {}
                 
         def all(self):
                 """Returns the dictionary __objects."""
@@ -63,7 +64,8 @@ class FileStorage:
                                 for key, value in data.items():
                                         class_name, obj_id = key.split('.')
                                 # Dynamically import the class
-                                cls = getattr(__import__('models.' + class_name, fromlist=[class_name]), class_name)
+                                cls = getattr(__import__('models.' + class_name,
+                                                         fromlist=[class_name]), class_name)
                                 # Create an instance of the class with its attributes
                                 obj = cls(**value)
                                 # Add the object to __objects
